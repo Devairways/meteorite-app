@@ -18,17 +18,19 @@ class App extends Component  {
   }
 
   componentDidMount(){
+    this.totalResultCount();
+  }
+
+  totalResultCount = () =>{
     fetch("https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=49999")
     .then(res => res.json())
     .then(data => {
-      this.setState({searchResults: data.length})
+      this.setState({searchResults: data.length},this.paginate)
      })
-    .then(()=>{ this.paginate()})
     .catch(err => console.log(err));
   }
  
   paginate = (event) =>{
-    
     const {count} = this.state;
     fetch(`https://data.nasa.gov/resource/gh4g-9sfh.json?$offset=${count * 25}&$limit=25`)
     .then(res => res.json())
@@ -36,30 +38,31 @@ class App extends Component  {
      })
     .catch(err => console.log(err));
   }
+
  browsePagination = (bool)=>{
   if (bool){
-    this.setState(state =>({count: state.count + 1}),this.paginate)
+    this.setState(state =>({count: state.count + 1}),this.paginate);
   }else if (this.state.count !== 1){
     this.setState(state =>({count: state.count - 1}),this.paginate);
     
   }
  }
+
  getSearchResult = ()=>{
   const {search} = this.state;
-  console.log(search)
-  fetch(`https://data.nasa.gov/resource/gh4g-9sfh.json?$having=name=${search}`)
-  .then(res => res.json)
-  .then(data => {this.setState({searchDisplay: data,searchResults: data.length});
+  fetch(`https://data.nasa.gov/resource/gh4g-9sfh.json?$where=upper(name)=upper('${search}')`)
+  .then(res => res.json())
+  .then(data => {this.setState({searchDisplay: data , searchResults: data.length });
      })
   .catch(err => console.log(err));
  }
 
   SearchMeteors= (event) =>{
-    if (event.target.value){
-       this.setState({search: event.target.value},this.getSearchResult);
+    if (event.searchKey){
+       this.setState({search: event.searchKey},this.getSearchResult);
     }
     else{
-      this.paginate();
+      this.totalResultCount();
     }
   }
 
