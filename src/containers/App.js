@@ -21,6 +21,14 @@ class App extends Component  {
     this.totalResultCount();
   }
 
+  getStyle =()=>{
+    return {
+      width: "80%",
+      margin:"0 auto",
+      background:"orange"
+    }
+  }
+
   totalResultCount = () =>{
     fetch("https://data.nasa.gov/resource/gh4g-9sfh.json?$limit=49999")
     .then(res => res.json())
@@ -71,7 +79,7 @@ class App extends Component  {
             const {searchDisplay,searchResults}= this.state;
             
     return(
-    <div className="App">
+    <div style={this.getStyle()}>
       <Header/>
       <SearchBox search= { this.SearchMeteors}/>
       <h3>there are {searchResults} results found.</h3>

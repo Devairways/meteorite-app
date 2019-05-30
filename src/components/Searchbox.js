@@ -16,7 +16,7 @@ class SearchBox extends Component {
     	const {searchKey, validInput} = this.state;
     	const regexItem = /[!@#$%^&*()]/;
 	return (
-		<div className= "pa2">
+		<div>
 		<input  type="Search" onChange={this.updateSearch} placeholder="Vind meteoor" />
 		<button onClick={()=>{if (!searchKey.match(regexItem)){
 			                  this.setState({validInput:true})
